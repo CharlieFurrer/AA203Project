@@ -145,7 +145,7 @@ class LunarLanderMDP(util.MDP):
     def hasLanded(self,newState):
         x,y = newState[0]
         vx,vy = newState[1]
-        if y <= 20 and y > 0:
+        if y <= 10 and y > 0:
             if abs(vx) < self.landing_threshold and abs(vy) < self.landing_threshold:
                 self.Landed = True 
                 self.landing_count +=1

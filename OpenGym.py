@@ -81,7 +81,7 @@ v_not=3
 grid_size=100
 thrust=1800
 dtheta_range=5
-time_penalty=0
+time_penalty=3
 fuel_penalty=0
 landing_reward=10000000
 out_of_bounds_penalty = 1000
@@ -91,17 +91,23 @@ args = (v_not,grid_size,thrust,dtheta_range,time_penalty,fuel_penalty,landing_re
 
 
 # In[5]:
-
-
 mdp = LunarLanderMDP(args)
 
 
 # In[6]:
-
-
 ql = QLearningAlgorithm(mdp.actions, mdp.discount(), identityFeatureExtractor,explorationProb=.1)
-q_rewards = util.simulate(mdp, ql, 50000)
-print("landed ",mdp.landing_count,"times")
+epochs = 10
+trials = 50000 
+old_landing_count = 0
+landing_rates = []
+for i in range(epochs):
+	q_rewards = util.simulate(mdp, ql, trials)
+	#print("Total landing percentage at epoch",i,"is",float(mdp.landing_count)/((i+1)*trials))
+	landing_rate = float(mdp.landing_count-old_landing_count)/(trials)
+	landing_rates.append(landing_rate)
+	print("Landed at percentage this epoch",landing_rate)
+	old_landing_count = mdp.landing_count
+	
 
 
 # In[8]:
